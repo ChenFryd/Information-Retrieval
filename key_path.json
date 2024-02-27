@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "peaceful-berm-415418",
+  "private_key_id": "584a7ed88c0fb570195dae704936904293683a09",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDDN6cqH352BC2Q\nAQTB30vPt0hqignJSw5qljZpzeQLLqJJTMxp5eJxYHN+uELu5i2eWWZQho17QEBn\nj3jNKI3eUx9TONONiia+pKC/cCKjOdxyLPhTZt57UY374jEAsU376XtS1wU+qxfN\nd5uGGFYg+mAkNypCjJd9IIEYJw7rW8yP5ccZFuH3SZ+WAlKEkh8s2DRWlSyhIIHV\ntgPhIzBaqV78pXdoNrmrhYULCtPspEVeMmBViou0feTZn3IUknx6fIlgwCwLzVUE\nbHvPy/K6T8u+MkKPJtRPePIPgHSwrueW7dHKvYH8ZQVEo+zpAN/VHBZsXN4xWN68\nzRKtI1XrAgMBAAECggEAXipPt7lmWk4Mnkxne48W9hSeWUnJi6/pPc/EYof+qsgt\nXvctGR3a+z5/p44BN1SPh7Tu7gPhZiTpjCrAJhIcULQ+xXmBTmJn6wjlQ0K3ao3E\nAM0hYbWatthxiSEj6wYbrFqE8sImVQLZofJCck316cVsL7vuZhiEEEboDnr0ruEK\nz+BqbMCob/fWQsacuSmJ5lkllGlFGjhSo+RtHVSjdVIb1vKdvqwfPWaaLdBJu3zT\nzax7MBtQBrH+NbAR7E2wECplVxDS7SljdXvU25D9LmI7atmGfzoCbNmAoL+yHfdb\n2DjOuWZ+AxyoLSI1Gb6ZAGIhO2lQnbOX+LnBzVnQGQKBgQDlUMmvDYY6zjmso+A1\neDp7s5Uf9LSBLb1Z6MQjOQiSGGGbh4LyLGo/bzWtvMgzeqD/tg+bpdu2BRnTBd8V\nnTOTOOcDQrZISIod5NH4vu1E5JLuPTxt89+FPXJ89wZQGUiRm4sMig90sDSC6aSw\n7BoOMhr/T44RiALNgB+rLogj4wKBgQDZ7xhRWpK4cddnBcWnYpvfUbwplSTEJ2lz\nBGRplrk2XXok8QstHLguLrVaiRW4/QUDzrA59B6irvcxJBHc/d3UQUr6JY1j4NWJ\nyh0wCYvf1Vh/3X08Qny/K0JmQgea4veOT7reqaY2tt0oVcVJaCJzdurXBSQOPlW1\nqVsFwAR0WQKBgQDInr1UIQjmObXLjDODlAPWZW553qRsv4+BMVsnVaZh6mK6pvuw\n05rAlJLpxNeB8i8YiDdvfNOTkzLco65gQn/0tTumZp8C7jOno6Dvdloug6roMzrD\nFzDeaLvZCGTFftk2SlaESeTruZy3S6GCB41kDgIAi6FHRS7uisEqCjOg8QKBgHpY\nuBYz+tqBTqQPoX7u5QLiJ/hQOmvElHZ1qMl+TEww/jlu+Q9CaEPFBRrmisNniEEy\n78wZOHmsMCnuTfj6rGZUoXr9SfsgZcENLoWhVl06sIxYE86YpN/NsWEnAI37jW7f\nY9FM/HsK/e1++VrUk0KvJ/e+cxdr90Ic6XS478dBAoGBAJOM3x+/pYaZibuW+26B\nTNDZU06p+FeTbGgRsHu6sKouHi4zBpxP2WDY24vvE2yo8ElV78FPR8BLJtln3OV4\ndqrhm0Op0Zxmkqy5WXpFa0bW7cgujC9ATMecA7KQeNQ5qiRiMDh0m2jw/lqvHfnb\n3NwiMeNkhmdoEX0yV/MjQWCE\n-----END PRIVATE KEY-----\n",
+  "client_email": "data-retrival-project@peaceful-berm-415418.iam.gserviceaccount.com",
+  "client_id": "115518886142448152599",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/data-retrival-project%40peaceful-berm-415418.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
