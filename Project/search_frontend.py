@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify
 
+from Project import backend
+
+
 class MyFlaskApp(Flask):
     def run(self, host=None, port=None, debug=None, **options):
         super(MyFlaskApp, self).run(host=host, port=port, debug=debug, **options)
@@ -86,7 +89,7 @@ def search_title():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-
+    res = backend.search_title(query)
     # END SOLUTION
     return jsonify(res)
 
