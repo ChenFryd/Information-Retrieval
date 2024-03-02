@@ -196,7 +196,7 @@ class InvertedIndex:
 
     @staticmethod
     def read_index(base_dir, name, bucket_name=None):
-        path = str(Path(base_dir) / f'{name}.pkl')
+        path = str(Path(base_dir))+ f'/{name}.pkl'
         bucket = None if bucket_name is None else get_bucket(bucket_name)
         with _open(path, 'rb', bucket) as f:
             return pickle.load(f)
