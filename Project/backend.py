@@ -1,7 +1,7 @@
 import inverted_index_gcp
 import os
 import re
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "..\key_path.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key_path.json"
 import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
