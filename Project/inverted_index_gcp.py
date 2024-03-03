@@ -65,7 +65,7 @@ class MultiFileReader:
     def read(self, locs, n_bytes):
         b = []
         for f_name, offset in locs:
-            f_name = str(self._base_dir / f_name)
+            f_name = str(self._base_dir) +"/" +f_name.split('/')[-1]
             if f_name not in self._open_files:
                 self._open_files[f_name] = _open(f_name, 'rb', self._bucket)
             f = self._open_files[f_name]
