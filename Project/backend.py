@@ -6,33 +6,56 @@ import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 from collections import defaultdict
+from nltk.stem import WordNetLemmatizer, PorterStemmer
 stop_words = set(stopwords.words('english'))
+lemmatizer = WordNetLemmatizer()
+stemmer = PorterStemmer()
+RE_WORD = re.compile(r"""[\#\@\w](['\-]?\w){2,24}""", re.UNICODE)
+stopwords_frozen = frozenset(stopwords.words('english'))
+corpus_stopwords = ["category", "references", "also", "external", "links",
+                    "may", "first", "see", "history", "people", "one", "two",
+                    "part", "thumb", "including", "second", "following",
+                    "many", "however", "would", "became", "best"]
+ALL_STOPWORDS = stopwords_frozen.union(corpus_stopwords)
+def tokenize(text, stem=False, lemm=False):
+    """
+    This function turns text into a list of tokens. Moreover, it filters stopwords.
+    Parameters:
+        lemm: lemmatize tokens
+        stem: stem tokens
+        text: string , represting the text to tokenize.
+    Returns:
+         list of tokens (e.g., list of tokens).
+    """
 
+    list_of_tokens = [token.group() for token in RE_WORD.finditer(text.lower()) if
+                      token.group() not in ALL_STOPWORDS]
+    if stem:
+        return [stemmer.stem(tok) for tok in list_of_tokens]
+    if lemm:
+        return [lemmatizer.lemmatize(tok) for tok in list_of_tokens]
+    return list_of_tokens
 
-def remove_stop_words_nltk(query):
-    # Tokenize the query and remove stop words
-    tokens = re.findall(r'\w+', query.lower())
-    filtered_tokens = [token for token in tokens if token not in stop_words]
-    return filtered_tokens
 
 
 def search_title(query):
     # Tokenize the query
-    tokens = remove_stop_words_nltk(query)
+    tokens = tokenize(query)
     # Initialize a dictionary to store document scores
-    doc_scores = defaultdict(int)
+    doc_scores = {}
     # Iterate over tokens in the title
     for token in tokens:
         # Retrieve the posting list for the token from the inverted index
-        posting_list = inverted_index.read_a_posting_list(base_dir, token, bucket_name)
+        posting_list = inverted_index.read_a_posting_list(token)
         # Update document scores based on the posting list
         for doc_id, tf in posting_list:
-            doc_scores[doc_id] += tf  # You can use more sophisticated scoring methods here
+            doc_scores[doc_id] += 1
 
-    # Sort documents by score (optional)
-    sorted_docs = sorted(doc_scores.items(), key=lambda x: x[1], reverse=True)
+        # Normalize document scores by the length of the title
+        doc_scores[doc_id] = doc_scores[doc_id] / inverted_index.get_title_length(doc_id)
+    sorted_match_counter = {k: v for k, v in sorted(doc_scores.items(), key=lambda item: item[1], reverse=True)}
 
-    return list(map(lambda x: x[0], sorted_docs))[:100]
+    return list(map(lambda x: x[0], sorted_match_counter))[:100]
 
 # Example usage:
 base_dir = "titlesIndex"

@@ -89,7 +89,7 @@ TF_MASK = 2 ** 16 - 1 # Masking the 16 low bits of an integer
 
 
 class InvertedIndex:
-    def __init__(self, docs={}):
+    def __init__(self, docs={}, base_dir=None, name=None, bucket_name=None):
         """ Initializes the inverted index and add documents to it (if provided).
         Parameters:
         -----------
@@ -110,6 +110,11 @@ class InvertedIndex:
         # the number of bytes from the beginning of the file where the posting list
         # starts.
         self.posting_locs = defaultdict(list)
+        self.title_length = defaultdict(int)
+        self.docID_to_title_dict = defaultdict(str)
+        self.base_dir = base_dir
+        self.name = name
+        self.bucket_name = bucket_name
 
         for doc_id, tokens in docs.items():
             self.add_doc(doc_id, tokens)
@@ -125,16 +130,23 @@ class InvertedIndex:
             self.df[w] = self.df.get(w, 0) + 1
             self._posting_list[w].append((doc_id, cnt))
 
-    def write_index(self, base_dir, name, bucket_name=None):
+    def get_title_length(self,doc_id):
+        """ Returns the length of the title of the document with the given `doc_id`."""
+        return self.title_length(doc_id)
+
+    def docID_to_title(self,doc_id):
+        """ Returns the title of the document with the given `doc_id`."""
+        return self.title_length(doc_id)
+    def write_index(self):
         """ Write the in-memory index to disk. Results in the file:
             (1) `name`.pkl containing the global term stats (e.g. df).
         """
         #### GLOBAL DICTIONARIES ####
-        self._write_globals(base_dir, name, bucket_name)
+        self._write_globals()
 
-    def _write_globals(self, base_dir, name, bucket_name):
-        path = str(Path(base_dir) / f'{name}.pkl')
-        bucket = None if bucket_name is None else get_bucket(bucket_name)
+    def _write_globals(self):
+        path = str(Path(self.base_dir) / f'{self.name}.pkl')
+        bucket = None if self.bucket_name is None else get_bucket(self.bucket_name)
         with _open(path, 'wb', bucket) as f:
             pickle.dump(self, f)
 
@@ -146,11 +158,11 @@ class InvertedIndex:
         del state['_posting_list']
         return state
 
-    def posting_lists_iter(self, base_dir, bucket_name=None):
+    def posting_lists_iter(self, bucket_name=None):
         """ A generator that reads one posting list from disk and yields
             a (word:str, [(doc_id:int, tf:int), ...]) tuple.
         """
-        with closing(MultiFileReader(base_dir, bucket_name)) as reader:
+        with closing(MultiFileReader(self.base_dir, self.bucket_name)) as reader:
             for w, locs in self.posting_locs.items():
                 b = reader.read(locs, self.df[w] * TUPLE_SIZE)
                 posting_list = []
@@ -160,11 +172,11 @@ class InvertedIndex:
                     posting_list.append((doc_id, tf))
                 yield w, posting_list
 
-    def read_a_posting_list(self, base_dir, w, bucket_name=None):
+    def read_a_posting_list(self, w, bucket_name=None):
         posting_list = []
         if not w in self.posting_locs:
             return posting_list
-        with closing(MultiFileReader(base_dir, bucket_name)) as reader:
+        with closing(MultiFileReader(self.base_dir, self.bucket_name)) as reader:
             locs = self.posting_locs[w]
             b = reader.read(locs, self.df[w] * TUPLE_SIZE)
             for i in range(self.df[w]):
