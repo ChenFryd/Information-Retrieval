@@ -117,7 +117,7 @@ class InvertedIndex:
         self.name = name
         self.bucket_name = bucket_name
         self.doc_data = defaultdict(int)
-        self.N = 0
+        self._N = 0
         for doc_id, tokens in docs.items():
             self.add_doc(doc_id, tokens)
 
