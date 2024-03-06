@@ -110,12 +110,14 @@ class InvertedIndex:
         # the number of bytes from the beginning of the file where the posting list
         # starts.
         self.posting_locs = defaultdict(list)
-        self.title_length = defaultdict(int)
+
+        # docId to title name
         self.docID_to_title_dict = defaultdict(str)
         self.base_dir = base_dir
         self.name = name
         self.bucket_name = bucket_name
-
+        self.doc_data = defaultdict(int)
+        self.N = 0
         for doc_id, tokens in docs.items():
             self.add_doc(doc_id, tokens)
 
@@ -158,7 +160,7 @@ class InvertedIndex:
         del state['_posting_list']
         return state
 
-    def posting_lists_iter(self, bucket_name=None):
+    def posting_lists_iter(self):
         """ A generator that reads one posting list from disk and yields
             a (word:str, [(doc_id:int, tf:int), ...]) tuple.
         """
@@ -172,7 +174,7 @@ class InvertedIndex:
                     posting_list.append((doc_id, tf))
                 yield w, posting_list
 
-    def read_a_posting_list(self, w, bucket_name=None):
+    def read_a_posting_list(self, w,):
         posting_list = []
         if not w in self.posting_locs:
             return posting_list
