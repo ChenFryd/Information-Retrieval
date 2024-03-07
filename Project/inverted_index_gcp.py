@@ -174,7 +174,7 @@ class InvertedIndex:
                     posting_list.append((doc_id, tf))
                 yield w, posting_list
 
-    def read_a_posting_list(self, w,):
+    def read_a_posting_list(self, w):
         posting_list = []
         if not w in self.posting_locs:
             return posting_list
