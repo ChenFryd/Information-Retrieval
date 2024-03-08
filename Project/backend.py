@@ -52,15 +52,15 @@ def search_title(query):
             doc_scores[doc_id] += 1
 
         # Normalize document scores by the length of the title
-        doc_scores[doc_id] = doc_scores[doc_id] / inverted_index.get_title_length(doc_id)
+        doc_scores[doc_id] = doc_scores[doc_id] / inverted_index.docID_to_length[doc_id]
     sorted_match_counter = {k: v for k, v in sorted(doc_scores.items(), key=lambda item: item[1], reverse=True)}
 
     return list(map(lambda x: x[0], sorted_match_counter))[:100]
 
 # Example usage:
-base_dir = "titlesIndex"
+base_dir = "index_title"
 bucket_name = "bucket_title"
-index_name = 'index'
+index_name = 'index_title'
 
 # Load the inverted index from the specified path
 inverted_index = inverted_index_gcp.InvertedIndex.read_index(base_dir, index_name,bucket_name)
