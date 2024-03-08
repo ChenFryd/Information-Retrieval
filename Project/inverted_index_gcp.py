@@ -12,21 +12,28 @@ import pickle
 from google.cloud import storage
 from collections import defaultdict
 from contextlib import closing
+from math import log
 
 PROJECT_ID = 'peaceful-berm-415418'
+
+
 def get_bucket(bucket_name):
     return storage.Client(PROJECT_ID).bucket(bucket_name)
+
 
 def _open(path, mode, bucket=None):
     if bucket is None:
         return open(path, mode)
     return bucket.blob(path).open(mode)
 
+
 # Let's start with a small block size of 30 bytes just to test things out.
 BLOCK_SIZE = 1999998
 
+
 class MultiFileWriter:
     """ Sequential binary writer to multiple files of up to BLOCK_SIZE each. """
+
     def __init__(self, base_dir, name, bucket_name=None):
         self._base_dir = Path(base_dir)
         self._name = name
@@ -55,8 +62,10 @@ class MultiFileWriter:
     def close(self):
         self._f.close()
 
+
 class MultiFileReader:
     """ Sequential binary reader of multiple files of up to BLOCK_SIZE each. """
+
     def __init__(self, base_dir, bucket_name=None):
         self._base_dir = Path(base_dir)
         self._bucket = None if bucket_name is None else get_bucket(bucket_name)
@@ -65,7 +74,7 @@ class MultiFileReader:
     def read(self, locs, n_bytes):
         b = []
         for f_name, offset in locs:
-            f_name = str(self._base_dir) +"/" +f_name.split('/')[-1]
+            f_name = str(self._base_dir) + "/" + f_name.split('/')[-1]
             if f_name not in self._open_files:
                 self._open_files[f_name] = _open(f_name, 'rb', self._bucket)
             f = self._open_files[f_name]
@@ -83,9 +92,10 @@ class MultiFileReader:
         self.close()
         return False
 
-TUPLE_SIZE = 6       # We're going to pack the doc_id and tf values in this
-                     # many bytes.
-TF_MASK = 2 ** 16 - 1 # Masking the 16 low bits of an integer
+
+TUPLE_SIZE = 6  # We're going to pack the doc_id and tf values in this
+# many bytes.
+TF_MASK = 2 ** 16 - 1  # Masking the 16 low bits of an integer
 
 
 class InvertedIndex:
@@ -113,9 +123,11 @@ class InvertedIndex:
 
         # docId to title name
         self.docID_to_title_dict = defaultdict(str)
+
         self.base_dir = base_dir
         self.name = name
         self.bucket_name = bucket_name
+
         self.doc_data = defaultdict(int)
         self._N = 0
         for doc_id, tokens in docs.items():
@@ -132,13 +144,15 @@ class InvertedIndex:
             self.df[w] = self.df.get(w, 0) + 1
             self._posting_list[w].append((doc_id, cnt))
 
-    def get_title_length(self,doc_id):
-        """ Returns the length of the title of the document with the given `doc_id`."""
-        return self.title_length(doc_id)
 
-    def docID_to_title(self,doc_id):
+    def docID_to_title(self, doc_id):
         """ Returns the title of the document with the given `doc_id`."""
-        return self.title_length(doc_id)
+        return self.docID_to_title_dict(doc_id)
+
+    def get_idf(self, w):
+        idf = log(self._N / (self.df[w] + 1), 2)
+        return idf
+
     def write_index(self):
         """ Write the in-memory index to disk. Results in the file:
             (1) `name`.pkl containing the global term stats (e.g. df).
@@ -169,8 +183,8 @@ class InvertedIndex:
                 b = reader.read(locs, self.df[w] * TUPLE_SIZE)
                 posting_list = []
                 for i in range(self.df[w]):
-                    doc_id = int.from_bytes(b[i*TUPLE_SIZE:i*TUPLE_SIZE+4], 'big')
-                    tf = int.from_bytes(b[i*TUPLE_SIZE+4:(i+1)*TUPLE_SIZE], 'big')
+                    doc_id = int.from_bytes(b[i * TUPLE_SIZE:i * TUPLE_SIZE + 4], 'big')
+                    tf = int.from_bytes(b[i * TUPLE_SIZE + 4:(i + 1) * TUPLE_SIZE], 'big')
                     posting_list.append((doc_id, tf))
                 yield w, posting_list
 
@@ -182,8 +196,8 @@ class InvertedIndex:
             locs = self.posting_locs[w]
             b = reader.read(locs, self.df[w] * TUPLE_SIZE)
             for i in range(self.df[w]):
-                doc_id = int.from_bytes(b[i*TUPLE_SIZE:i*TUPLE_SIZE+4], 'big')
-                tf = int.from_bytes(b[i*TUPLE_SIZE+4:(i+1)*TUPLE_SIZE], 'big')
+                doc_id = int.from_bytes(b[i * TUPLE_SIZE:i * TUPLE_SIZE + 4], 'big')
+                tf = int.from_bytes(b[i * TUPLE_SIZE + 4:(i + 1) * TUPLE_SIZE], 'big')
                 posting_list.append((doc_id, tf))
         return posting_list
 
@@ -207,10 +221,9 @@ class InvertedIndex:
                 pickle.dump(posting_locs, f)
         return bucket_id
 
-
     @staticmethod
     def read_index(base_dir, name, bucket_name=None):
-        path = str(Path(base_dir))+ f'/{name}.pkl'
+        path = str(Path(base_dir)) + f'/{name}.pkl'
         bucket = None if bucket_name is None else get_bucket(bucket_name)
         with _open(path, 'rb', bucket) as f:
             return pickle.load(f)
