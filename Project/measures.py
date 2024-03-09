@@ -1,6 +1,6 @@
 import json
 
-from Project.backend import search_title
+from Project.backend import search_title, search_body , search_anchor
 import time
 
 
@@ -55,11 +55,15 @@ with open('queries_train.json', 'rt') as f:
 for query, true_doc_ids_str in queries.items():
     true_doc_ids = [int(doc_id) for doc_id in true_doc_ids_str]  # Ensure integer comparison
     #predicted_doc_ids_anchor = search_anchor(tokens)  # Assuming this returns a list of integers
+
     start_time = time.time()  # Start the timer
-    predicted_doc_ids = search_title(query)
+    #predicted_doc_ids = search_title(query)
+    predicted_doc_ids = search_anchor(query)
+    #predicted_doc_ids = search_body(query)
     end_time = time.time()  # Stop the timer
+
     # Convert predicted_doc_ids to integers if they are not already
-  #  predicted_doc_ids_anchor = [int(doc_id) for doc_id in predicted_doc_ids_anchor]
+    #predicted_doc_ids_anchor = [int(doc_id) for doc_id in predicted_doc_ids_anchor]
     predicted_doc_ids = [int(doc_id) for doc_id in predicted_doc_ids]
     #predicted_doc_ids = list(set(predicted_doc_ids_anchor) & set(predicted_doc_ids_titles))
     # Calculate metrics
