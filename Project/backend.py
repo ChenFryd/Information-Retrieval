@@ -42,28 +42,23 @@ def search_title(query):
     # Tokenize the query
     tokens = tokenize(query)
     # Initialize a dictionary to store document scores
-    doc_scores = {}
+    doc_scores = defaultdict(int)  # Ensures that each key starts with a default value of 0
     # Iterate over tokens in the title
     for token in tokens:
         # Retrieve the posting list for the token from the inverted index
-        posting_list = inverted_index.read_a_posting_list(token)
+        posting_list = index_title.read_a_posting_list(token)
         # Update document scores based on the posting list
         for doc_id, tf in posting_list:
             doc_scores[doc_id] += 1
 
         # Normalize document scores by the length of the title
-        doc_scores[doc_id] = doc_scores[doc_id] / inverted_index.docID_to_length[doc_id]
+        doc_scores[doc_id] = doc_scores[doc_id] / index_title.docID_to_title_dict[doc_id]
     sorted_match_counter = {k: v for k, v in sorted(doc_scores.items(), key=lambda item: item[1], reverse=True)}
+    return list(map(lambda x: x[0], sorted_match_counter.items()))[:100]
 
-    return list(map(lambda x: x[0], sorted_match_counter))[:100]
 
-# Example usage:
 base_dir = "index_title"
 bucket_name = "bucket_title"
 index_name = 'index_title'
-
 # Load the inverted index from the specified path
-inverted_index = inverted_index_gcp.InvertedIndex.read_index(base_dir, index_name,bucket_name)
-query = "Star wars"
-results = search_title(query)
-print(len(results))
+index_title = inverted_index_gcp.InvertedIndex.read_index(base_dir, index_name,bucket_name)
