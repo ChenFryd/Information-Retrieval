@@ -56,9 +56,26 @@ def search_title(query):
     sorted_match_counter = {k: v for k, v in sorted(doc_scores.items(), key=lambda item: item[1], reverse=True)}
     return list(map(lambda x: x[0], sorted_match_counter.items()))[:100]
 
+def search_anchor(query):
+    # Tokenize the query
+    tokens = tokenize(query)
+    # Initialize a dictionary to store document scores
+    doc_scores = defaultdict(int)  # Ensures that each key starts with a default value of 0
+    # Iterate over tokens in the title
+    for token in tokens:
+        # Retrieve the posting list for the token from the inverted index
+        posting_list = index_anchor.read_a_posting_list(token)
+        # Update document scores based on the posting list
+        for doc_id, tf in posting_list:
+            doc_scores[doc_id] = 1 # boolean model
+
+        # Normalize document scores by the length of the title
+    sorted_match_counter = {k: v for k, v in sorted(doc_scores.items(), key=lambda item: item[1], reverse=True)}
+    return list(map(lambda x: x[0], sorted_match_counter.items()))[:100]
 
 base_dir = "index_title"
 bucket_name = "bucket_title"
 index_name = 'index_title'
 # Load the inverted index from the specified path
 index_title = inverted_index_gcp.InvertedIndex.read_index(base_dir, index_name,bucket_name)
+index_anchor = inverted_index_gcp.InvertedIndex.read_index("index_anchor", "index_anchor",bucket_name)
