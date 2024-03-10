@@ -57,8 +57,8 @@ for query, true_doc_ids_str in queries.items():
     #predicted_doc_ids_anchor = search_anchor(tokens)  # Assuming this returns a list of integers
 
     start_time = time.time()  # Start the timer
-    #predicted_doc_ids = search_title(query)
-    predicted_doc_ids = search_anchor(query)
+    predicted_doc_ids = search_title(query)
+    #predicted_doc_ids = search_anchor(query)
     #predicted_doc_ids = search_body(query)
     end_time = time.time()  # Stop the timer
 

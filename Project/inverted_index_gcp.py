@@ -95,6 +95,7 @@ class MultiFileReader:
 
 TUPLE_SIZE = 6  # We're going to pack the doc_id and tf values in this
 # many bytes.
+TUPLE_SIZE_TFIDF = 12  # We're going to pack the doc_id, tf and doc_length values in this
 TF_MASK = 2 ** 16 - 1  # Masking the 16 low bits of an integer
 
 
@@ -189,8 +190,10 @@ class InvertedIndex:
                     posting_list.append((doc_id, tf))
                 yield w, posting_list
 
-    def read_a_posting_list(self, base_dir, w):
+    def read_a_posting_list(self, w, base_dir=None):
         posting_list = []
+        if base_dir is None:
+            base_dir = self.base_dir
         if w not in self.posting_locs:
             return posting_list
         with closing(MultiFileReader(base_dir, self.bucket_name)) as reader:
@@ -202,13 +205,15 @@ class InvertedIndex:
                 posting_list.append((doc_id, tf))
         return posting_list
 
-    def read_a_tfidf_list(self, base_dir, docID):
+    def read_a_tfidf_list(self, docID, base_dir=None):
         tfidf_list = []
+        if base_dir is None:
+            base_dir = self.base_dir
         if docID not in self.tfidf_locs:
             return tfidf_list
         with closing(MultiFileReader(base_dir, self.bucket_name)) as reader:
             locs = self.tfidf_locs[docID]
-            b = reader.read(locs, self.tfidf_locs[docID] * TUPLE_SIZE)
+            b = reader.read(locs, self.tfidf_locs[docID] * TUPLE_SIZE_TFIDF)
             for i in range(self.tfidf_locs[docID]):
                 offset = i * TUPLE_SIZE
                 doc_id = int.from_bytes(b[offset:offset + 4], 'big')
@@ -245,7 +250,7 @@ class InvertedIndex:
         with closing(MultiFileWriter(base_dir, bucket_id, bucket_name)) as writer:
             for docID, tfidf, doc_length in list_docID_tfidf_length:
                 # convert to bytes
-                b = b''.join([(docID << 32 | (tfidf & TF_MASK) << 16 | (doc_length & TF_MASK)).to_bytes(TUPLE_SIZE, 'big')])
+                b = b''.join([(docID << 32| (tfidf & TF_MASK) << 16 | (doc_length & TF_MASK)).to_bytes(TUPLE_SIZE_TFIDF, 'big')])
                 # write to file(s)
                 locs = writer.write(b)
                 # save file locations to index

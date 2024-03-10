@@ -156,4 +156,4 @@ bucket_name = "bucket_title"
 # Load the inverted index from the specified path
 index_title = inverted_index_gcp.InvertedIndex.read_index("index_title", "index_title",bucket_name)
 index_anchor = inverted_index_gcp.InvertedIndex.read_index("index_anchor", "index_anchor",bucket_name)
-index_text = inverted_index_gcp.InvertedIndex.read_index("index_text", "index_text",bucket_name)
+#index_text = inverted_index_gcp.InvertedIndex.read_index("index_text", "index_text",bucket_name)
