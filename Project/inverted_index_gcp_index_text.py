@@ -189,11 +189,11 @@ class InvertedIndex:
                     posting_list.append((doc_id, tf))
                 yield w, posting_list
 
-    def read_a_posting_list(self, base_dir, w):
+    def read_a_posting_list(self, w):
         posting_list = []
         if w not in self.posting_locs:
             return posting_list
-        with closing(MultiFileReader(base_dir, self.bucket_name)) as reader:
+        with closing(MultiFileReader(self.base_dir, self.bucket_name)) as reader:
             locs = self.posting_locs[w]
             b = reader.read(locs, self.df[w] * TUPLE_SIZE)
             for i in range(self.df[w]):
@@ -202,11 +202,11 @@ class InvertedIndex:
                 posting_list.append((doc_id, tf))
         return posting_list
 
-    def read_a_tfidf_list(self, base_dir, docID):
+    def read_a_tfidf_list(self, docID):
         tfidf_list = []
         if docID not in self.tfidf_locs:
             return tfidf_list
-        with closing(MultiFileReader(base_dir, self.bucket_name)) as reader:
+        with closing(MultiFileReader(self.base_dir, self.bucket_name)) as reader:
             locs = self.tfidf_locs[docID]
             b = reader.read(locs, self.tfidf_locs[docID] * TUPLE_SIZE)
             for i in range(self.tfidf_locs[docID]):
