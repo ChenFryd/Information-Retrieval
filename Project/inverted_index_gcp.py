@@ -152,8 +152,9 @@ class InvertedIndex:
         return self.docID_to_title_dict(doc_id)
 
     def get_idf(self, w):
-        idf = log(self._N / (self.df[w] + 1), 2)
-        return idf
+        if self.df[w] == 0:
+            return log(self._N, 2) #self.df = 1
+        return log(self._N / (self.df[w]), 2)
 
     def write_index(self):
         """ Write the in-memory index to disk. Results in the file:
@@ -190,13 +191,11 @@ class InvertedIndex:
                     posting_list.append((doc_id, tf))
                 yield w, posting_list
 
-    def read_a_posting_list(self, w, base_dir=None):
+    def read_a_posting_list(self, w):
         posting_list = []
-        if base_dir is None:
-            base_dir = self.base_dir
         if w not in self.posting_locs:
             return posting_list
-        with closing(MultiFileReader(base_dir, self.bucket_name)) as reader:
+        with closing(MultiFileReader(self.base_dir, self.bucket_name)) as reader:
             locs = self.posting_locs[w]
             b = reader.read(locs, self.df[w] * TUPLE_SIZE)
             for i in range(self.df[w]):
@@ -205,22 +204,6 @@ class InvertedIndex:
                 posting_list.append((doc_id, tf))
         return posting_list
 
-    def read_a_tfidf_list(self, docID, base_dir=None):
-        tfidf_list = []
-        if base_dir is None:
-            base_dir = self.base_dir
-        if docID not in self.tfidf_locs:
-            return tfidf_list
-        with closing(MultiFileReader(base_dir, self.bucket_name)) as reader:
-            locs = self.tfidf_locs[docID]
-            b = reader.read(locs, self.tfidf_locs[docID] * TUPLE_SIZE_TFIDF)
-            for i in range(self.tfidf_locs[docID]):
-                offset = i * TUPLE_SIZE
-                doc_id = int.from_bytes(b[offset:offset + 4], 'big')
-                tfidf = int.from_bytes(b[offset + 4:offset + 8], 'big')
-                doc_length = int.from_bytes(b[offset + 8:offset + 12], 'big')
-                tfidf_list.append((doc_id, tfidf, doc_length))
-        return tfidf_list
 
     @staticmethod
     def write_a_posting_list(b_w_pl, base_dir, bucket_name=None):
@@ -242,24 +225,6 @@ class InvertedIndex:
                 pickle.dump(posting_locs, f)
         return bucket_id
 
-    @staticmethod
-    def write_a_tfidf_list(b_w_pl, base_dir, bucket_name=None):
-        tfidf_locs = defaultdict(list)
-        bucket_id, list_docID_tfidf_length = b_w_pl
-
-        with closing(MultiFileWriter(base_dir, bucket_id, bucket_name)) as writer:
-            for docID, tfidf, doc_length in list_docID_tfidf_length:
-                # convert to bytes
-                b = b''.join([(docID << 32| (tfidf & TF_MASK) << 16 | (doc_length & TF_MASK)).to_bytes(TUPLE_SIZE_TFIDF, 'big')])
-                # write to file(s)
-                locs = writer.write(b)
-                # save file locations to index
-                tfidf_locs[docID].extend(locs)
-            path = str(Path(base_dir) / f'{bucket_id}_posting_locs.pickle')
-            bucket = None if bucket_name is None else get_bucket(bucket_name)
-            with _open(path, 'wb', bucket) as f:
-                pickle.dump(tfidf_locs, f)
-        return bucket_id
 
     @staticmethod
     def read_index(base_dir, name, bucket_name=None):
