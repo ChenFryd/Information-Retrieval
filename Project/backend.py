@@ -29,7 +29,7 @@ ALL_STOPWORDS = stopwords_frozen.union(corpus_stopwords)
 import concurrent.futures
 
 
-def tokenize(text, stem=False, lemm=False):
+def tokenize(text):
     """
     This function turns text into a list of tokens. Moreover, it filters stopwords.
     Parameters:
@@ -42,13 +42,7 @@ def tokenize(text, stem=False, lemm=False):
 
     list_of_tokens = [token.group() for token in RE_WORD.finditer(text.lower()) if
                       token.group() not in ALL_STOPWORDS]
-    if stem:
-        return [stemmer.stem(tok) for tok in list_of_tokens]
-    if lemm:
-        return [lemmatizer.lemmatize(tok) for tok in list_of_tokens]
     return list_of_tokens
-
-
 
 def search_title(query):
     # Tokenize the query
@@ -153,7 +147,6 @@ def cosin_similarity_score(tokenized_query, index):
 
 def search(query):
     res = []
-    tokens = tokenize(query)
 
     # Adjust the weight assignments as needed
     title_weight, body_weight, anchor_weight = 0.3, 0.6, 0.1
@@ -161,9 +154,9 @@ def search(query):
     merged_score = defaultdict(float)
 
     # These functions now return a list of (doc_id, score) tuples
-    sorted_score_body = cosin_similarity_score(tokens, index_text)
-    sorted_score_title = search_title(tokens)
-    sorted_score_anchor = search_anchor(tokens)
+    sorted_score_body = search_body(query)
+    sorted_score_title = search_title(query)
+    sorted_score_anchor = search_anchor(query)
 
     # Process returned list of tuples for each function
     for doc_id, score in sorted_score_body:
