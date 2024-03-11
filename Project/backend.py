@@ -49,23 +49,6 @@ def tokenize(text, stem=False, lemm=False):
     return list_of_tokens
 
 
-# def search_title(query):
-#     # Tokenize the query
-#     tokens = tokenize(query)
-#     # Initialize a dictionary to store document scores
-#     doc_scores = defaultdict(int)  # Ensures that each key starts with a default value of 0
-#     # Iterate over tokens in the title
-#     for token in tokens:
-#         # Retrieve the posting list for the token from the inverted index
-#         posting_list = index_title.read_a_posting_list(token)
-#         # Update document scores based on the posting list
-#         for doc_id, tf in posting_list:
-#             doc_scores[doc_id] += 1
-#
-#     # Normalize document scores by the length of the title
-#     doc_scores[doc_id] = doc_scores[doc_id] / index_title.docID_to_title_dict[doc_id]
-#     sorted_match_counter = {k: v for k, v in sorted(doc_scores.items(), key=lambda item: item[1], reverse=True)}
-#     return list(map(lambda x: x[0], sorted_match_counter.items()))[:30]
 
 def search_title(query):
     # Tokenize the query
@@ -93,22 +76,6 @@ def search_title(query):
     sorted_match_counter = {k: v for k, v in sorted(doc_scores.items(), key=lambda item: item[1], reverse=True)}
     return list(sorted_match_counter.keys())[:30]
 
-
-# def search_anchor(query):
-#     # Tokenize the query
-#     tokens = tokenize(query)
-#     # Initialize a dictionary to store document scores
-#     doc_scores = defaultdict(int)  # Ensures that each key starts with a default value of 0
-#     # Iterate over tokens in the title
-#     for token in tokens:
-#         # Retrieve the posting list for the token from the inverted index
-#         posting_list = index_anchor.read_a_posting_list(token)
-#         # Update document scores based on the posting list
-#         for doc_id, _ in posting_list:
-#             doc_scores[doc_id] += 1  # boolean model
-#
-#     sorted_match_counter = {k: v for k, v in sorted(doc_scores.items(), key=lambda item: item[1], reverse=True)}
-#     return list(map(lambda x: x[0], sorted_match_counter.items()))[:30]
 
 def search_anchor(query):
     # Tokenize the query
@@ -184,38 +151,38 @@ def cosin_similarity_score(tokenized_query, index):
     return sorted_cosin_sim
 
 
-# def bm25_score(tokenized_query, index, b=0.75, k1=1.5, k3=1.5):
-#     """
-#     Support function to calculate bm25 score
-#     :param index: InvertedIndex
-#     :param tokenized_query: list of query tokens post-processing
-#     :return: sorted dictionary of doc_id: bm25_similarity_score
-#     """
-#     score = defaultdict(float)
-#     query_len = len(tokenized_query)
-#     tf_query = Counter(tokenized_query)
-#     index_pages_count = index_text._N
-#     index_dict = {"index_text": index_text, "index_title": index_title, "index_anchor": index_anchor}
-#     avg_dl = {index_name: sum([data[1] for doc_id, data in index_text.doc_data.items()]) / index_pages_count for index_name, index in index_dict.items()}[index_folder]
-#     for term, count in tf_query.items():
-#         pls = index_text.read_a_posting_list(term)
-#         if pls is None:
-#             pls = []
-#         term_idf = index.get_idf(term)
-#         # normalized query tfidf
-#         query_tf = count / query_len
-#         for doc_id, doc_tf in pls:
-#             doc_len = index.doc_data[doc_id][1]
-#             numerator = ((k1 + 1) * doc_tf / doc_len) * term_idf * ((k3 + 1) * query_tf)
-#             denumerator = (k1 * (1 - b + b * doc_len / avg_dl) + doc_tf / doc_len) * (k3 + query_tf)
-#             score[doc_id] += numerator / denumerator
-#
-#     sorted_bm25 = {k: v for k, v in sorted(score.items(), key=lambda item: item[1], reverse=True)}
-#     return sorted_bm25
+def search(query):
+    res = []
+    tokens = tokenize(query)
+
+    # Adjust the weight assignments as needed
+    title_weight, body_weight, anchor_weight = 0.3, 0.6, 0.1
+
+    merged_score = defaultdict(float)
+
+    # These functions now return a list of (doc_id, score) tuples
+    sorted_score_body = cosin_similarity_score(tokens, index_text)
+    sorted_score_title = search_title(tokens)
+    sorted_score_anchor = search_anchor(tokens)
+
+    # Process returned list of tuples for each function
+    for doc_id, score in sorted_score_body:
+        merged_score[doc_id] += score * body_weight
+    for doc_id, score in sorted_score_title:
+        merged_score[doc_id] += score * title_weight
+    for doc_id, score in sorted_score_anchor:
+        merged_score[doc_id] += score * anchor_weight
+
+    # Sort merged scores and return the top 100
+    sorted_merged_scores = sorted(merged_score.items(), key=lambda item: item[1], reverse=True)[:30]
+
+    # Assuming you want to return a list of doc_id based on the sorted merged scores
+    # Modify this as per your requirement
+    return [doc_id for doc_id, score in sorted_merged_scores]
 
 
 bucket_name = "bucket_title"
 # Load the inverted index from the specified path
-#index_title = inverted_index_gcp.InvertedIndex.read_index("index_title", "index_title", bucket_name)
-#index_anchor = inverted_index_gcp.InvertedIndex.read_index("index_anchor", "index_anchor", bucket_name)
+index_title = inverted_index_gcp.InvertedIndex.read_index("index_title", "index_title", bucket_name)
+index_anchor = inverted_index_gcp.InvertedIndex.read_index("index_anchor", "index_anchor", bucket_name)
 index_text = inverted_index_gcp.InvertedIndex.read_index("index_text", "index_text",bucket_name)
