@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 
-from Project import backend
+import backend
 
 
 class MyFlaskApp(Flask):
@@ -34,7 +34,7 @@ def search():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-
+    res = backend.search(query)
     # END SOLUTION
     return jsonify(res)
 
@@ -59,7 +59,7 @@ def search_body():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-
+    res = backend.search_body(query)
     # END SOLUTION
     return jsonify(res)
 
@@ -119,7 +119,7 @@ def search_anchor():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-    
+    res = backend.search_anchor(query)
     # END SOLUTION
     return jsonify(res)
 
@@ -178,4 +178,4 @@ def get_pageview():
 
 if __name__ == '__main__':
     # run the Flask RESTful API, make the server publicly available (host='0.0.0.0') on port 8080
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True, use_reloader=False)

@@ -1,6 +1,6 @@
 import json
 
-from Project.backend import search_title, search_body , search_anchor
+from Project.backend import search_title, search_body, search_anchor, search
 import time
 
 
@@ -59,7 +59,8 @@ for query, true_doc_ids_str in queries.items():
     start_time = time.time()  # Start the timer
     #predicted_doc_ids = search_title(query)
     #predicted_doc_ids = search_anchor(query)
-    predicted_doc_ids = search_body(query)
+    #predicted_doc_ids = search_body(query)
+    predicted_doc_ids = search(query)
     end_time = time.time()  # Stop the timer
 
     # Convert predicted_doc_ids to integers if they are not already
