@@ -161,6 +161,7 @@ def cosin_similarity_score(tokenized_query, index):
     tf_query = Counter(tokenized_query)
     query_norm = sum([math.pow((tf_term / query_len) * index.get_idf(term), 2) for term, tf_term in tf_query.items()])
     lock = threading.Lock()
+    #test
     def process_term(term):
         pls = index.read_a_posting_list(term)
         if pls is None:
