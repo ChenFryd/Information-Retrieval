@@ -74,65 +74,65 @@ def print_stats(stats):
     # Sample usage with the data provided in the question
 multiline_string1  = """
 Query: genetics
-Average Precision: 0.097, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.0, Search completed in 2.04 seconds.
+Average Precision: 0.108, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.0, Search completed in 3.27 seconds.
 Query: Who is considered the "Father of the United States"?
-Average Precision: 0.0, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 44.26 seconds.
+Average Precision: 0.0, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 26.05 seconds.
 Query: economic
-Average Precision: 0.211, Recall@10: 0.02, F1@10: 0.033, Precision@10: 0.1, Results Quality: 0.154, Search completed in 3.90 seconds.
+Average Precision: 0.211, Recall@10: 0.02, F1@10: 0.033, Precision@10: 0.1, Results Quality: 0.154, Search completed in 5.22 seconds.
 Query: When was the United Nations founded?
-Average Precision: 0.211, Recall@10: 0.043, F1@10: 0.071, Precision@10: 0.2, Results Quality: 0.083, Search completed in 28.63 seconds.
+Average Precision: 0.211, Recall@10: 0.043, F1@10: 0.071, Precision@10: 0.2, Results Quality: 0.083, Search completed in 23.77 seconds.
 Query: video gaming
-Average Precision: 0.111, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.0, Search completed in 9.79 seconds.
+Average Precision: 0.111, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.0, Search completed in 8.98 seconds.
 Query: 3D printing technology
-Average Precision: 0.181, Recall@10: 0.045, F1@10: 0.073, Precision@10: 0.2, Results Quality: 0.0, Search completed in 9.42 seconds.
+Average Precision: 0.181, Recall@10: 0.045, F1@10: 0.073, Precision@10: 0.2, Results Quality: 0.0, Search completed in 8.20 seconds.
 Query: Who is the author of "1984"?
-Average Precision: 0.0, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 8.67 seconds.
+Average Precision: 0.0, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 10.41 seconds.
 Query: bioinformatics
-Average Precision: 0.101, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 2.07 seconds.
+Average Precision: 0.101, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 3.65 seconds.
 Query: Who is known for proposing the heliocentric model of the solar system?
-Average Precision: 0.0, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 35.24 seconds.
+Average Precision: 0.0, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 24.10 seconds.
 Query: Describe the process of water erosion.
-Average Precision: 0.522, Recall@10: 0.104, F1@10: 0.172, Precision@10: 0.5, Results Quality: 0.348, Search completed in 21.49 seconds.
+Average Precision: 0.522, Recall@10: 0.104, F1@10: 0.172, Precision@10: 0.5, Results Quality: 0.348, Search completed in 9.64 seconds.
 Query: When was the Berlin Wall constructed?
-Average Precision: 0.572, Recall@10: 0.102, F1@10: 0.169, Precision@10: 0.5, Results Quality: 0.273, Search completed in 10.93 seconds.
+Average Precision: 0.62, Recall@10: 0.102, F1@10: 0.169, Precision@10: 0.5, Results Quality: 0.273, Search completed in 7.41 seconds.
 Query: What is the meaning of the term "Habeas Corpus"?
-Average Precision: 0.579, Recall@10: 0.122, F1@10: 0.203, Precision@10: 0.6, Results Quality: 0.402, Search completed in 14.92 seconds.
+Average Precision: 0.584, Recall@10: 0.122, F1@10: 0.203, Precision@10: 0.6, Results Quality: 0.402, Search completed in 9.05 seconds.
 Query: telecommunications
-Average Precision: 0.071, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 2.04 seconds.
+Average Precision: 0.071, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 4.09 seconds.
 Query: internet
-Average Precision: 0.158, Recall@10: 0.024, F1@10: 0.039, Precision@10: 0.1, Results Quality: 0.087, Search completed in 2.89 seconds.
+Average Precision: 0.2, Recall@10: 0.024, F1@10: 0.039, Precision@10: 0.1, Results Quality: 0.087, Search completed in 4.56 seconds.
 Query: What are the characteristics of a chemical element?
-Average Precision: 0.188, Recall@10: 0.02, F1@10: 0.033, Precision@10: 0.1, Results Quality: 0.08, Search completed in 7.24 seconds.
+Average Precision: 0.188, Recall@10: 0.02, F1@10: 0.033, Precision@10: 0.1, Results Quality: 0.08, Search completed in 5.73 seconds.
 Query: Describe the structure of a plant cell.
-Average Precision: 0.133, Recall@10: 0.02, F1@10: 0.033, Precision@10: 0.1, Results Quality: 0.0, Search completed in 17.59 seconds.
+Average Precision: 0.137, Recall@10: 0.02, F1@10: 0.033, Precision@10: 0.1, Results Quality: 0.0, Search completed in 8.97 seconds.
 Query: Who painted "Starry Night"?
-Average Precision: 0.289, Recall@10: 0.061, F1@10: 0.093, Precision@10: 0.2, Results Quality: 0.155, Search completed in 11.87 seconds.
+Average Precision: 0.289, Recall@10: 0.061, F1@10: 0.093, Precision@10: 0.2, Results Quality: 0.155, Search completed in 8.72 seconds.
 Query: computer
-Average Precision: 0.212, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.113, Search completed in 3.53 seconds.
+Average Precision: 0.212, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.113, Search completed in 4.51 seconds.
 Query: What is the structure of the Earth's layers?
-Average Precision: 0.288, Recall@10: 0.023, F1@10: 0.037, Precision@10: 0.1, Results Quality: 0.085, Search completed in 12.66 seconds.
+Average Precision: 0.288, Recall@10: 0.023, F1@10: 0.037, Precision@10: 0.1, Results Quality: 0.085, Search completed in 7.86 seconds.
 Query: When did World War II end?
-Average Precision: 0.129, Recall@10: 0.02, F1@10: 0.033, Precision@10: 0.1, Results Quality: 0.044, Search completed in 34.14 seconds.
+Average Precision: 0.2, Recall@10: 0.02, F1@10: 0.033, Precision@10: 0.1, Results Quality: 0.044, Search completed in 24.67 seconds.
 Query: When was the Gutenberg printing press invented?
-Average Precision: 0.429, Recall@10: 0.109, F1@10: 0.179, Precision@10: 0.5, Results Quality: 0.366, Search completed in 16.59 seconds.
+Average Precision: 0.449, Recall@10: 0.109, F1@10: 0.179, Precision@10: 0.5, Results Quality: 0.366, Search completed in 8.92 seconds.
 Query: medicine
-Average Precision: 0.124, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.0, Search completed in 5.50 seconds.
+Average Precision: 0.126, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.0, Search completed in 5.33 seconds.
 Query: Describe the water cycle.
-Average Precision: 0.155, Recall@10: 0.021, F1@10: 0.035, Precision@10: 0.1, Results Quality: 0.112, Search completed in 14.14 seconds.
+Average Precision: 0.168, Recall@10: 0.021, F1@10: 0.035, Precision@10: 0.1, Results Quality: 0.112, Search completed in 9.13 seconds.
 Query: artificial intelligence
-Average Precision: 0.457, Recall@10: 0.093, F1@10: 0.151, Precision@10: 0.4, Results Quality: 0.259, Search completed in 6.62 seconds.
+Average Precision: 0.457, Recall@10: 0.093, F1@10: 0.151, Precision@10: 0.4, Results Quality: 0.259, Search completed in 4.86 seconds.
 Query: physics
-Average Precision: 0.098, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.0, Search completed in 3.41 seconds.
+Average Precision: 0.103, Recall@10: 0.022, F1@10: 0.036, Precision@10: 0.1, Results Quality: 0.0, Search completed in 4.21 seconds.
 Query: nanotechnology
-Average Precision: 0.65, Recall@10: 0.128, F1@10: 0.211, Precision@10: 0.6, Results Quality: 0.453, Search completed in 2.83 seconds.
+Average Precision: 0.683, Recall@10: 0.128, F1@10: 0.211, Precision@10: 0.6, Results Quality: 0.453, Search completed in 3.58 seconds.
 Query: When did the Black Death pandemic occur?
-Average Precision: 0.05, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 24.18 seconds.
+Average Precision: 0.05, Recall@10: 0.0, F1@10: 0.0, Precision@10: 0.0, Results Quality: 0.0, Search completed in 16.27 seconds.
 Query: neuroscience
-Average Precision: 0.575, Recall@10: 0.085, F1@10: 0.14, Precision@10: 0.4, Results Quality: 0.309, Search completed in 3.13 seconds.
+Average Precision: 0.575, Recall@10: 0.085, F1@10: 0.14, Precision@10: 0.4, Results Quality: 0.309, Search completed in 3.44 seconds.
 Query: snowboard
-Average Precision: 0.116, Recall@10: 0.062, F1@10: 0.077, Precision@10: 0.1, Results Quality: 0.0, Search completed in 3.19 seconds.
+Average Precision: 0.116, Recall@10: 0.062, F1@10: 0.077, Precision@10: 0.1, Results Quality: 0.0, Search completed in 4.11 seconds.
 Query: Who is the founder of modern psychology?
-Average Precision: 0.135, Recall@10: 0.041, F1@10: 0.068, Precision@10: 0.2, Results Quality: 0.0, Search completed in 14.13 seconds.
+Average Precision: 0.174, Recall@10: 0.041, F1@10: 0.068, Precision@10: 0.2, Results Quality: 0.0, Search completed in 8.65 seconds.
 """
 
 multiline_string2 = """
