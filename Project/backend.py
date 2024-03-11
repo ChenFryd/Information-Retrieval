@@ -12,11 +12,12 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 from collections import defaultdict, Counter
 from nltk.stem import WordNetLemmatizer, PorterStemmer
+from concurrent.futures import ThreadPoolExecutor
+import threading
 
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 stemmer = PorterStemmer()
-import threading
 
 RE_WORD = re.compile(r"""[\#\@\w](['\-]?\w){2,24}""", re.UNICODE)
 stopwords_frozen = frozenset(stopwords.words('english'))
@@ -159,18 +160,21 @@ def cosin_similarity_score(tokenized_query, index):
     query_len = len(tokenized_query)
     tf_query = Counter(tokenized_query)
     query_norm = sum([math.pow((tf_term / query_len) * index.get_idf(term), 2) for term, tf_term in tf_query.items()])
-    for term, count in tf_query.items():
+    lock = threading.Lock()
+    def process_term(term):
         pls = index.read_a_posting_list(term)
         if pls is None:
             pls = []
         term_idf = index.get_idf(term)
-        # normalized query tfidf
-        query_tfidf = (count / query_len) * term_idf
         for doc_id, doc_tf in pls:
             doc_len = index.doc_data[doc_id][1]
-            # normalized document tfidf
             doc_tfidf = (doc_tf / doc_len) * term_idf
-            cosine_sim_numerator[doc_id] += doc_tfidf * query_tfidf
+            score = doc_tfidf * ((tf_query[term] / query_len) * term_idf)
+            with lock:
+                cosine_sim_numerator[doc_id] += score
+
+    with ThreadPoolExecutor() as executor:
+        executor.map(process_term, tokenized_query)  # Process each term concurrently
 
     # vector length of each doc is calculated at index creation
     cosine_sim = {doc_id: numerator / (index.doc_data[doc_id][0] * sqrt(query_norm)) for doc_id, numerator in
